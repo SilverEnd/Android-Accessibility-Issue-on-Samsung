@@ -1,4 +1,4 @@
-# Android-Playground
+# Android-Accessibility-Issue-on-Samsung
 
 The purpose of this repo is the demostrate Android Accessibility issue that been found in Samsung devices.
 
