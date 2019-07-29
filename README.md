@@ -1,26 +1,24 @@
-# Android-Playground
+# Android Q Save File to External Storage crash
 
-The purpose of this repo is the demostrate Android Accessibility issue that been found in Samsung devices.
+The purpose of this branch is to show a demo of a Android Q related crash in terms of external storage
 
 The problem is lays on the following pre-requisit:
-* User is using a Samsung device
-* Talk Back is turned ON, 
-* User is using Linear Navigation Gestures (swipe left & right to navigate between elementds on screen)
-* User is navigating inside a recycler view
-
-Items that are outside of the current viewpoert (screen) cannot gain focus (by Talk Back) when user tries to navigate to the next item from the last visible item in recycler view. 
+* User is on Android Q beta 5 device
+* A clean build & assemble for the apk been installed & tested - `./gradlew clean assembleDebug`
 
 
-Please refer to the following screenshots steps:
+## Issue
+App is crashing due to a non-recognized file directory path:
 
-![](assets/41149711225699743.png)
+```
+Caused by: java.io.IOException: No such file or directory
+         at java.io.UnixFileSystem.createFileExclusively0(Native Method)
+         at java.io.UnixFileSystem.createFileExclusively(UnixFileSystem.java:317)
+         at java.io.File.createNewFile(File.java:1008)
+         at com.erikzuo.androidplayground.MainActivity.saveFile(MainActivity.kt:55)
+         at com.erikzuo.androidplayground.MainActivity.onRequestPermissionsResult(MainActivity.kt:39)
+```
 
-What happens in Samsung device:
+And this is potentially caused by `.mkdirs()` fails at the first place.
 
-![](assets/8169354057151942962.png) ![](assets/6268400203715852237.png) 
-
-
-Expected (what happens in other devices):
-
-![](assets/1430829563001271669.png) ![](assets/6390499224881021949.png) 
-
+### NOTE: This does not happen in devices on Android Pie or lower OS versions
