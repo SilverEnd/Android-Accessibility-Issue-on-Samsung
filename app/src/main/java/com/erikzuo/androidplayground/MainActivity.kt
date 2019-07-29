@@ -1,71 +1,70 @@
 package com.erikzuo.androidplayground
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.TextView
+import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.erikzuo.androidplayground.databinding.ActivityMainBinding
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var activityBinding: ActivityMainBinding
-    private val adapter = MyAdapter()
+
+    private val testFileName = "test.txt"
+    private val testFileDirectory: File = File("${Environment.getExternalStorageDirectory().absolutePath}/Test/debug")
+    private val testFile: File = File(testFileDirectory, testFileName)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        activityBinding.list.apply {
-            adapter = this@MainActivity.adapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-        }
-
-        adapter.setData()
-    }
-}
-
-class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-
-    private val myDataset: MutableList<String> = mutableListOf()
-
-    class MyViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MyAdapter.MyViewHolder {
-        val textView = LayoutInflater.from(parent.context).inflate(
-            R.layout.my_text_view, parent, false
-        ) as TextView
-
-        return MyViewHolder(textView)
+        requestExternalStoragePermissionIfNeeded()
     }
 
-    override fun onBindViewHolder(
-        holder: MyViewHolder,
-        position: Int
-    ) {
-        holder.textView.text = myDataset[position]
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE -> {
+                if (ContextCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+                    saveFile()
+                }
+            }
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
     }
 
-    override fun getItemCount() = myDataset.size
+    private fun requestExternalStoragePermissionIfNeeded() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
+        )
+    }
 
-    fun setData() {
-        val newList = mutableListOf<String>()
-        for (i in 0..100) {
-            newList.add("string $i")
+    private fun saveFile() {
+        if (!testFile.exists()) {
+            testFileDirectory.mkdirs()
+            testFile.createNewFile()
         }
 
-        myDataset.apply {
-            clear()
-            addAll(newList)
+        try {
+            FileOutputStream(testFile).run {
+                write("test".toByteArray())
+                flush()
+                close()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
+    }
 
-        notifyDataSetChanged()
+    companion object {
+        private const val WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 100
     }
 }
