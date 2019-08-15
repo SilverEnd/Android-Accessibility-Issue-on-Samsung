@@ -27,6 +27,12 @@
                 android:layout_marginEnd="16dp"
                 android:visibility="@{ item.value ? View.VISIBLE : View.GONE }" />
 
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Text"
+                android:visibility="@{ item.value ? View.VISIBLE : View.GONE }" />
+
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
