@@ -4,4 +4,4 @@ The purpose of this repo is the demonstrate some Android related topics/issues t
 
 ## This branch demos the issue of a ProgressBar inside a RecyclerView that is disappearing when the item of recycler view is been re-bound.
 
-![](assets/ezgif.com-video-to-gif (11).gif)
+![](assets/ezgif.com-video-to-gif.gif)
