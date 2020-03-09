@@ -10,12 +10,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.erikzuo.androidplayground.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ClickHandler {
 
     private lateinit var activityBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        activityBinding.apply {
+            clickHandler = this@MainActivity
+        }
     }
+
+    override fun onCardClick() {}
+}
+
+interface ClickHandler {
+    fun onCardClick()
 }
