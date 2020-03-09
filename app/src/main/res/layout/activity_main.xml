@@ -13,10 +13,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:padding="16dp">
 
         <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="@{ () -> clickHandler.onCardClick() }"
                 app:layout_constraintEnd_toEndOf="parent"
